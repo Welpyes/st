@@ -49,11 +49,9 @@ tclearglyph(Glyph *gp, int usecurattr)
 	if (usecurattr) {
 		gp->fg = term.c.attr.fg;
 		gp->bg = term.c.attr.bg;
-		gp->decor = term.c.attr.decor;
 	} else {
 		gp->fg = defaultfg;
 		gp->bg = defaultbg;
-		gp->decor = DECOR_DEFAULT_COLOR;
 	}
 	gp->mode = ATTR_NULL;
 	gp->u = ' ';
@@ -663,9 +661,6 @@ tgetglyphs(char *buf, const Glyph *gp, const Glyph *lgp)
 {
 	while (gp <= lgp)
 		if (gp->mode & ATTR_WDUMMY) {
-			gp++;
-		} else if (gp->mode & ATTR_IMAGE) {
-			buf += utf8encode(IMAGE_PLACEHOLDER_CHAR, buf);
 			gp++;
 		} else {
 			buf += utf8encode((gp++)->u, buf);

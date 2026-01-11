@@ -19,7 +19,6 @@ This patchset is based on [st-flexipatch](https://github.com/bakkeby/st-flexipat
 - [reflow](https://github.com/bakkeby/st-flexipatch)
 - [sixel](https://gist.github.com/saitoha/70e0fdf22e3e8f63ce937c7f7da71809)
 - [sync](https://st.suckless.org/patches/sync/)
-- [Kitty Graphics](https://st.suckless.org/patches/kitty-graphics-protocol/)
 
 ## Installation 
 

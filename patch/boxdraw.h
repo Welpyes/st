@@ -60,7 +60,7 @@
 #define BR (1<<3)
 
 /* Data for U+2500 - U+259F except dashes/diagonals */
-const unsigned short boxdata[256] = {
+static const unsigned short boxdata[256] = {
 	/* light lines */
 	[0x00] = BDL + LH,       /* light horizontal */
 	[0x02] = BDL + LV,       /* light vertical */
