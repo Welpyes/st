@@ -49,9 +49,11 @@ tclearglyph(Glyph *gp, int usecurattr)
 	if (usecurattr) {
 		gp->fg = term.c.attr.fg;
 		gp->bg = term.c.attr.bg;
+		gp->decor = term.c.attr.decor;
 	} else {
 		gp->fg = defaultfg;
 		gp->bg = defaultbg;
+		gp->decor = DECOR_DEFAULT_COLOR;
 	}
 	gp->mode = ATTR_NULL;
 	gp->u = ' ';

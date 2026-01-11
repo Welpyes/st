@@ -40,3 +40,6 @@ void xsetsel(char *);
 int xstartdraw(void);
 void xximspot(int, int);
 void xclearwin(void);
+
+void xstartimagedraw(int *dirty, int rows);
+void xfinishimagedraw();

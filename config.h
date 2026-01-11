@@ -5,15 +5,22 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Maple Mono NF:pixelsize=15:antialias=true:autohint=true";
+static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 
 /*
  * background image
  * expects farbfeld format
  * pseudo transparency fixes coordinates to the screen origin
  */
-static const char *bgfile = "/data/data/com.termux/files/home/.cache/st_wallpaper.ff";
-static const int pseudotransparency = 1;
+static const char *bgfile = "/path/to/image.ff";
+static const int pseudotransparency = 0;
+
+/* How to align the content in the window when the size of the terminal
+ * doesn't perfectly match the size of the window. The values are percentages.
+ * 50 means center, 0 means flush left/top, 100 means flush right/bottom.
+ */
+static int anysize_halign = 50;
+static int anysize_valign = 50;
 
 static int borderpx = 2;
 
@@ -25,13 +32,14 @@ static int borderpx = 2;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
-static char *shell = "/data/data/com.termux/files/usr/bin/bash";
+static char *shell = "/bin/sh";
 char *utmp = NULL;
 /* scroll program: to enable use a string like "scroll" */
 char *scroll = NULL;
 char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 
 /* identification sequence returned in DA and DECID */
+/* By default, use the same one as kitty. */
 char *vtiden = "\033[?62;4c"; /* VT200 family (62) with sixel (4) */
 
 /* sixel rgb byte order: LSBFirst or MSBFirst */
@@ -94,11 +102,11 @@ int hidecursor = 1;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 1;
-const int boxdraw_bold = 1;
+const int boxdraw = 0;
+const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
-const int boxdraw_braille = 1;
+const int boxdraw_braille = 0;
 
 /*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
@@ -136,32 +144,32 @@ char *xdndescchar = " !\"#$&'()*;<>?[\\]^`{|}~";
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-	"#15161E",  // black
-	"#f7768e",  // red
-	"#9ece6a",  // green
-	"#e0af68",  // yellow
-	"#7aa2f7",  // blue
-	"#bb9af7",  // magenta
-	"#7dcfff",  // cyan
-	"#a9b1d6",  // white
+	"black",
+	"red3",
+	"green3",
+	"yellow3",
+	"blue2",
+	"magenta3",
+	"cyan3",
+	"gray90",
 
 	/* 8 bright colors */
-	"#414868",  // bright black
-	"#f7768e",  // bright red
-	"#9ece6a",  // bright green
-	"#e0af68",  // bright yellow
-	"#7aa2f7",  // bright blue
-	"#bb9af7",  // bright magenta
-	"#7dcfff",  // bright cyan
-	"#c0caf5",  // bright white
+	"gray50",
+	"red",
+	"green",
+	"yellow",
+	"#5c5cff",
+	"magenta",
+	"cyan",
+	"white",
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#c0caf5", /* 256 -> cursor */
-	"#414868", /* 257 -> rev cursor (bright black) */
-	"#1a1b26", /* 258 -> bg */
-	"#c0caf5", /* 259 -> fg */
+	"#add8e6", /* 256 -> cursor */
+	"#555555", /* 257 -> rev cursor*/
+	"#000000", /* 258 -> bg */
+	"#e5e5e5", /* 259 -> fg */
 };
 
 /*
@@ -210,6 +218,28 @@ static unsigned int mousebg = 0;
 static unsigned int defaultattr = 11;
 
 /*
+ * Graphics configuration
+ */
+
+/// The template for the cache directory.
+const char graphics_cache_dir_template[] = "/data/data/com.termux/files/usr/tmp/st-images-XXXXXX";
+/// The max size of a single image file, in bytes.
+unsigned graphics_max_single_image_file_size = 20 * 1024 * 1024;
+/// The max size of the cache, in bytes.
+unsigned graphics_total_file_cache_size = 300 * 1024 * 1024;
+/// The max ram size of an image or placement, in bytes.
+unsigned graphics_max_single_image_ram_size = 100 * 1024 * 1024;
+/// The max total size of all images loaded into RAM.
+unsigned graphics_max_total_ram_size = 300 * 1024 * 1024;
+/// The max total number of image placements and images.
+unsigned graphics_max_total_placements = 4096;
+/// The ratio by which limits can be exceeded. This is to reduce the frequency
+/// of image removal.
+double graphics_excess_tolerance_ratio = 0.05;
+/// The minimum delay between redraws caused by animations, in milliseconds.
+unsigned graphics_animation_min_delay = 20;
+
+/*
  * Force mouse select/shortcuts while mask is active (when MODE_MOUSE is set).
  * Note that if you want to use ShiftMask with selmasks, set this to an other
  * modifier, set to 0 to not use it.
@@ -220,8 +250,12 @@ static uint forcemousemod = ShiftMask;
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
+#define MODKEY Mod1Mask
+#define TERMMOD (ControlMask|ShiftMask)
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release  screen */
+	{ TERMMOD,              Button3, previewimage,   {.s = "feh"} },
+	{ TERMMOD,              Button2, showimageinfo,  {},            1 },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ ShiftMask,            Button5, ttysend,        {.s = "\033[6;2~"} },
@@ -232,8 +266,6 @@ static MouseShortcut mshortcuts[] = {
 };
 
 /* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask
-#define TERMMOD (ControlMask|ShiftMask)
 
 static char *openurlcmd[] = { "/bin/sh", "-c",
 	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
@@ -249,9 +281,8 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,   {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,     {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,        {.i =  0} },
-	{ MODKEY,               XK_equal,       zoom,            {.f = +1} },
-	{ MODKEY,               XK_minus,       zoom,            {.f = -1} },
-	{ MODKEY,               XK_g,           zoomreset,       {.f =  0} },
+	{ TERMMOD,              XK_Prior,       zoom,            {.f = +1} },
+	{ TERMMOD,              XK_Next,        zoom,            {.f = -1} },
 	{ TERMMOD,              XK_Home,        zoomreset,       {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,        {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,       {.i =  0} },
@@ -260,6 +291,10 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Y,           selpaste,        {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,        {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,         {.i =  0} },
+	{ TERMMOD,              XK_F1,          togglegrdebug,  {.i =  0} },
+	{ TERMMOD,              XK_F6,          dumpgrstate,    {.i =  0} },
+	{ TERMMOD,              XK_F7,          unloadimages,   {.i =  0} },
+	{ TERMMOD,              XK_F8,          toggleimages,   {.i =  0} },
 };
 
 /*

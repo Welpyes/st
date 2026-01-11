@@ -35,10 +35,12 @@ SIXEL_LIBS = `$(PKG_CONFIG) --libs imlib2`
 
 # includes and libs, uncomment harfbuzz for the ligatures patch
 INCS = -I$(X11INC) \
+       `$(PKG_CONFIG) --cflags imlib2` \
        `$(PKG_CONFIG) --cflags fontconfig` \
        `$(PKG_CONFIG) --cflags freetype2` \
        $(LIGATURES_INC)
-LIBS = -L$(X11LIB) -lm -lX11 -lutil -lXft ${SIXEL_LIBS} ${XRENDER} ${XCURSOR}\
+LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft -lXrender ${SIXEL_LIBS} ${XRENDER} ${XCURSOR}\
+       `$(PKG_CONFIG) --libs zlib` \
        `$(PKG_CONFIG) --libs fontconfig` \
        `$(PKG_CONFIG) --libs freetype2` \
        $(LIGATURES_LIBS) \
