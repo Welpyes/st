@@ -18,7 +18,10 @@
 #define DIVCEIL(n, d)		(((n) + ((d) - 1)) / (d))
 #define DEFAULT(a, b)		(a) = (a) ? (a) : (b)
 #define LIMIT(x, a, b)		(x) = (x) < (a) ? (a) : (x) > (b) ? (b) : (x)
-#define ATTRCMP(a, b)		(((a).mode & (~ATTR_WRAP) & (~ATTR_LIGA)) != ((b).mode & (~ATTR_WRAP) & (~ATTR_LIGA)) || \
+#define ATTRCMP(a, b)		(((a).mode & (~ATTR_WRAP) & (~ATTR_LIGA) & (~ATTR_BOXDRAW) & (~ATTR_IMAGE) & (~ATTR_SIXEL)) != ((b).mode & (~ATTR_WRAP) & (~ATTR_LIGA) & (~ATTR_BOXDRAW) & (~ATTR_IMAGE) & (~ATTR_SIXEL)) || \
+				((a).mode & ATTR_BOXDRAW) != ((b).mode & ATTR_BOXDRAW) || \
+				((a).mode & ATTR_IMAGE) != ((b).mode & ATTR_IMAGE) || \
+				((a).mode & ATTR_SIXEL) != ((b).mode & ATTR_SIXEL) || \
 				(a).fg != (b).fg || \
 				(a).bg != (b).bg || (a).decor != (b).decor)
 #define TIMEDIFF(t1, t2)	((t1.tv_sec-t2.tv_sec)*1000 + \

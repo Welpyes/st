@@ -1221,8 +1221,8 @@ xinit(int cols, int rows)
 	xloadcols();
 
 	/* adjust fixed window geometry */
-	win.w = 2 * win.hborderpx + 2 * borderpx + cols * win.cw;
-	win.h = 2 * win.vborderpx + 2 * borderpx + rows * win.ch;
+	win.w = 2 * borderpx + cols * win.cw;
+	win.h = 2 * borderpx + rows * win.ch;
 	if (xw.gm & XNegative)
 		xw.l += DisplayWidth(xw.dpy, xw.scr) - win.w - 2;
 	if (xw.gm & YNegative)
@@ -1264,6 +1264,7 @@ xinit(int cols, int rows)
 
 	/* Xft rendering context */
 	xw.draw = XftDrawCreate(xw.dpy, xw.buf, xw.vis, xw.cmap);
+	boxdraw_xinit(xw.dpy, xw.cmap, xw.draw, xw.vis);
 
 	/* input methods */
 	if (!ximopen(xw.dpy)) {
@@ -1398,16 +1399,8 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
 			specs[numspecs].glyph = XftCharIndex(xw.dpy, font->match, rune);
 			specs[numspecs].x = xp;
 			specs[numspecs].y = yp;
-			xp += runewidth;
 			numspecs++;
-			continue;
-		}
-
-		/* Advance the drawing cursor if we've moved to a new cluster */
-
-
-
-		if (glyphs[idx].mode & ATTR_BOXDRAW) {
+		} else if (glyphs[idx].mode & ATTR_BOXDRAW) {
 			/* minor shoehorning: boxdraw uses only this ushort */
 			specs[numspecs].font = font->match;
 			specs[numspecs].glyph = boxdrawindex(&glyphs[idx]);
@@ -1490,6 +1483,18 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
 			specs[numspecs].x = (short)xp;
 			specs[numspecs].y = (short)yp;
 			numspecs++;
+		}
+
+		/* Advance the drawing cursor if we've moved to a new cluster */
+		if (code_idx + 1 < shaped.count) {
+			if (shaped.glyphs[code_idx + 1].cluster != idx) {
+				xp += runewidth;
+				cluster_xp = xp;
+				cluster_yp = yp;
+			}
+		} else {
+			/* Last glyph */
+			xp += runewidth;
 		}
 	}
 
@@ -1717,7 +1722,7 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 	}
 
 	if (base.mode & ATTR_BOXDRAW) {
-		drawboxes(winx, winy, width / len, win.ch, fg, bg, specs, len);
+		drawboxes(winx, winy, win.cw, win.ch, fg, bg, specs, len);
 	} else {
 	/* Set the clip region because Xft is sometimes dirty. */
 	r.x = 0;

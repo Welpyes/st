@@ -5,15 +5,15 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "Maple Mono NF:pixelsize=15:antialias=true:autohint=true";
 
 /*
  * background image
  * expects farbfeld format
  * pseudo transparency fixes coordinates to the screen origin
  */
-static const char *bgfile = "/path/to/image.ff";
-static const int pseudotransparency = 0;
+static const char *bgfile = "/data/data/com.termux/files/home/.cache/st_wallpaper.ff";
+static const int pseudotransparency = 1;
 
 /* How to align the content in the window when the size of the terminal
  * doesn't perfectly match the size of the window. The values are percentages.
@@ -32,7 +32,7 @@ static int borderpx = 2;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
-static char *shell = "/bin/sh";
+static char *shell = "/data/data/com.termux/files/usr/bin/bash";
 char *utmp = NULL;
 /* scroll program: to enable use a string like "scroll" */
 char *scroll = NULL;
@@ -102,11 +102,11 @@ int hidecursor = 1;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 0;
-const int boxdraw_bold = 0;
+const int boxdraw = 1;
+const int boxdraw_bold = 1;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
-const int boxdraw_braille = 0;
+const int boxdraw_braille = 1;
 
 /*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
@@ -144,32 +144,32 @@ char *xdndescchar = " !\"#$&'()*;<>?[\\]^`{|}~";
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
+	"#15161E",  // black
+	"#f7768e",  // red
+	"#9ece6a",  // green
+	"#e0af68",  // yellow
+	"#7aa2f7",  // blue
+	"#bb9af7",  // magenta
+	"#7dcfff",  // cyan
+	"#a9b1d6",  // white
 
 	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
+	"#414868",  // bright black
+	"#f7768e",  // bright red
+	"#9ece6a",  // bright green
+	"#e0af68",  // bright yellow
+	"#7aa2f7",  // bright blue
+	"#bb9af7",  // bright magenta
+	"#7dcfff",  // bright cyan
+	"#c0caf5",  // bright white
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#add8e6", /* 256 -> cursor */
-	"#555555", /* 257 -> rev cursor*/
-	"#000000", /* 258 -> bg */
-	"#e5e5e5", /* 259 -> fg */
+	"#c0caf5", /* 256 -> cursor */
+	"#414868", /* 257 -> rev cursor (bright black) */
+	"#1a1b26", /* 258 -> bg */
+	"#c0caf5", /* 259 -> fg */
 };
 
 /*
@@ -246,12 +246,22 @@ unsigned graphics_animation_min_delay = 20;
  */
 static uint forcemousemod = ShiftMask;
 
+
+/* Internal keyboard shortcuts. */
+#define MODKEY Mod1Mask
+#define TERMMOD (ControlMask|ShiftMask)
+
+static char *openurlcmd[] = { "/bin/sh", "-c",
+	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
+	"externalpipe", NULL };
+
+static char *setbgcolorcmd[] = { "/bin/sh", "-c",
+	"printf '\033]11;#008000\007'",
+	"externalpipein", NULL };
 /*
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
-#define MODKEY Mod1Mask
-#define TERMMOD (ControlMask|ShiftMask)
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release  screen */
 	{ TERMMOD,              Button3, previewimage,   {.s = "feh"} },
@@ -265,15 +275,6 @@ static MouseShortcut mshortcuts[] = {
 	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\005"}, 0, S_ALT },
 };
 
-/* Internal keyboard shortcuts. */
-
-static char *openurlcmd[] = { "/bin/sh", "-c",
-	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
-	"externalpipe", NULL };
-
-static char *setbgcolorcmd[] = { "/bin/sh", "-c",
-	"printf '\033]11;#008000\007'",
-	"externalpipein", NULL };
 
 static Shortcut shortcuts[] = {
 	/* mask                 keysym          function         argument   screen */
@@ -281,8 +282,9 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,   {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,     {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,        {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,            {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,            {.f = -1} },
+	{ MODKEY,               XK_equal,       zoom,            {.f = +1} },
+	{ MODKEY,               XK_minus,       zoom,            {.f = -1} },
+	{ MODKEY,               XK_g,           zoomreset,       {.f =  0} },
 	{ TERMMOD,              XK_Home,        zoomreset,       {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,        {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,       {.i =  0} },
