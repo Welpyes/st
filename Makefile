@@ -8,8 +8,13 @@ SRC = st.c x.c $(LIGATURES_C) $(SIXEL_C) rowcolumn_diacritics_helpers.c graphics
 OBJ = $(SRC:.c=.o)
 
 CC = clang
+
+# Termux-specific paths
+IS_ANDROID = $(shell uname -o | grep -q Android && echo 1 || echo 0)
+ifeq ($(IS_ANDROID),1)
 CFLAGS += -I/data/data/com.termux/files/usr/include
 LDFLAGS += -L/data/data/com.termux/files/usr/lib
+endif
 
 all: st
 

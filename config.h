@@ -32,7 +32,11 @@ static int borderpx = 2;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
+#ifdef __ANDROID__
 static char *shell = "/data/data/com.termux/files/usr/bin/bash";
+#else
+static char *shell = "/bin/sh";
+#endif
 char *utmp = NULL;
 /* scroll program: to enable use a string like "scroll" */
 char *scroll = NULL;
@@ -222,7 +226,11 @@ static unsigned int defaultattr = 11;
  */
 
 /// The template for the cache directory.
+#ifdef __ANDROID__
 const char graphics_cache_dir_template[] = "/data/data/com.termux/files/usr/tmp/st-images-XXXXXX";
+#else
+const char graphics_cache_dir_template[] = "/tmp/st-images-XXXXXX";
+#endif
 /// The max size of a single image file, in bytes.
 unsigned graphics_max_single_image_file_size = 20 * 1024 * 1024;
 /// The max size of the cache, in bytes.

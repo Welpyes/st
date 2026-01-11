@@ -23,19 +23,29 @@ XCURSOR = `$(PKG_CONFIG) --libs xcursor`
 # Uncomment the lines below for the ligatures patch / LIGATURES_PATCH
 LIGATURES_C = hb.c
 LIGATURES_H = hb.h
-LIGATURES_INC = `$(PKG_CONFIG) --cflags harfbuzz`
-LIGATURES_LIBS = `$(PKG_CONFIG) --libs harfbuzz`
 
 # Uncomment this for the SIXEL patch / SIXEL_PATCH
 SIXEL_C = sixel.c sixel_hls.c
-SIXEL_LIBS = `$(PKG_CONFIG) --libs imlib2`
 
 # Uncomment for the netwmicon patch / NETWMICON_PATCH
 #NETWMICON_LIBS = `$(PKG_CONFIG) --libs gdlib`
 
 # includes and libs, uncomment harfbuzz for the ligatures patch
+IS_ANDROID = $(shell uname -o | grep -q Android && echo 1 || echo 0)
+ifeq ($(IS_ANDROID),1)
+LIGATURES_INC = -I/data/data/com.termux/files/usr/include/harfbuzz
+LIGATURES_LIBS = -lharfbuzz
+SIXEL_INC = `$(PKG_CONFIG) --cflags imlib2`
+SIXEL_LIBS = `$(PKG_CONFIG) --libs imlib2`
+else
+LIGATURES_INC = `$(PKG_CONFIG) --cflags harfbuzz`
+LIGATURES_LIBS = `$(PKG_CONFIG) --libs harfbuzz`
+SIXEL_INC = `$(PKG_CONFIG) --cflags imlib2`
+SIXEL_LIBS = `$(PKG_CONFIG) --libs imlib2`
+endif
+
 INCS = -I$(X11INC) \
-       `$(PKG_CONFIG) --cflags imlib2` \
+       $(SIXEL_INC) \
        `$(PKG_CONFIG) --cflags fontconfig` \
        `$(PKG_CONFIG) --cflags freetype2` \
        $(LIGATURES_INC)
