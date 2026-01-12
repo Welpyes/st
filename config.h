@@ -22,7 +22,7 @@ static const int pseudotransparency = 1;
 static int anysize_halign = 50;
 static int anysize_valign = 50;
 
-static int borderpx = 2;
+static int borderpx = 5;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -293,7 +293,6 @@ static Shortcut shortcuts[] = {
 	{ MODKEY,               XK_equal,       zoom,            {.f = +1} },
 	{ MODKEY,               XK_minus,       zoom,            {.f = -1} },
 	{ MODKEY,               XK_g,           zoomreset,       {.f =  0} },
-	{ TERMMOD,              XK_Home,        zoomreset,       {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,        {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,       {.i =  0} },
 	{ ShiftMask,            XK_Page_Up,     kscrollup,       {.i = -1}, S_PRI },
