@@ -12,7 +12,11 @@ static char *font = "Maple Mono NF:pixelsize=15:antialias=true:autohint=true";
  * expects farbfeld format
  * pseudo transparency fixes coordinates to the screen origin
  */
+#ifdef __ANDROID__
 static const char *bgfile = "/data/data/com.termux/files/home/.cache/st_wallpaper.ff";
+#else
+static const char *bgfile = "/home/username/.config/st_wallpaper.ff";
+#endif
 static const int pseudotransparency = 1;
 
 /* How to align the content in the window when the size of the terminal

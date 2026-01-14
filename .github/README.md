@@ -44,14 +44,31 @@ zypper in gd-devel libXft-devel harfbuzz-devel
 # Install font-symbola and libXft-bgra
 ```
 
-### compile from source
+### Configuration and installation
 
+#### set up your font:
+```c
+// in line 8 you should find this:
+static char *font = "Maple Mono NF:pixelsize=15:antialias=true:autohint=true";
 ```
-git clone https://github.com/welpyes/st
-cd st
-make
+change it `Maple Mono NF` to whatever you like.
+you can download Maple Mono NF font [here](https://example-link.com)
 
-# or Install on your system directly
-
-sudo make install
+#### setting up the background
+```c
+// in line 18 you should find this
+static const char *bgfile = "/home/username/.config/st_wallpaper.ff";
 ```
+
+change `username` to your username (e.g `"/home/username/.config/st_wallpaper.ff"`)<br><br>
+
+then run(see help for more options)
+```
+./st-bg.sh -o 0 ~/image.png
+```
+
+then just:
+```
+make install clean PREFIX=$PREFIX
+```
+
