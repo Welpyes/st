@@ -13,6 +13,7 @@ static char *font = "Maple Mono NF:pixelsize=15:antialias=true:autohint=true";
  * pseudo transparency fixes coordinates to the screen origin
  */
 static const char *bgfile = "~/.cache/st_wallpaper.png";
+static const int use_bgimage = 0;
 static const int pseudotransparency = 1;
 
 /* How to align the content in the window when the size of the terminal

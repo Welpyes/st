@@ -13,6 +13,7 @@ static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
  * pseudo transparency fixes coordinates to the screen origin
  */
 static const char *bgfile = "~/.cache/st-wallpaper.ff";
+static const int use_bgimage = 1;
 static const int pseudotransparency = 0;
 
 /* How to align the content in the window when the size of the terminal

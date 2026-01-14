@@ -16,7 +16,12 @@ bginit()
 	char path[PATH_MAX];
 
 	memset(&gcvalues, 0, sizeof(gcvalues));
-	xw.bggc = XCreateGC(xw.dpy, xw.win, 0, &gcvalues);
+	if (!use_bgimage)
+		gcvalues.foreground = dc.col[defaultbg].pixel;
+	xw.bggc = XCreateGC(xw.dpy, xw.win, use_bgimage ? 0 : GCForeground, &gcvalues);
+
+	if (!use_bgimage)
+		return;
 
 	if (bgfile[0] == '~') {
 		const char *home = getenv("HOME");
