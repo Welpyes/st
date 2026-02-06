@@ -1,6 +1,5 @@
-#include <arpa/inet.h>
+#include <Imlib2.h>
 
 static void updatexy(void);
-static XImage *loadff(const char *);
 static void bginit();
 static void reload_image();

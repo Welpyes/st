@@ -17,8 +17,8 @@ static char *font2[] = {
  * expects farbfeld format
  * pseudo transparency fixes coordinates to the screen origin
  */
-static const char *bgfile = "/path/to/image.ff";
-static const int pseudotransparency = 0;
+static const char *bgfile = "/data/data/com.termux/files/home/Documents/wallpapers/sui-megane.jpg";
+static const int pseudotransparency = 1;
 
 static int borderpx = 2;
 

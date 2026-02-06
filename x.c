@@ -719,6 +719,8 @@ cresize(int width, int height)
 	win.hborderpx = (win.w - col * win.cw) / 2;
 	win.vborderpx = (win.h - row * win.ch) / 2;
 
+	bginit();
+
 	tresize(col, row);
 	xresize(col, row);
 	ttyresize(win.tw, win.th);
@@ -2133,6 +2135,7 @@ resize(XEvent *e)
 			e->xconfigure.x == win.x && e->xconfigure.y == win.y)
 			return;
 		updatexy();
+		redraw();
 	} else
 	if (e->xconfigure.width == win.w && e->xconfigure.height == win.h)
 		return;
