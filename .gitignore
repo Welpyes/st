@@ -1,0 +1,30 @@
+# Build artifacts
+st
+st-icat
+*.o
+*.a
+*.so
+
+# Configuration
+config.h
+config.mk.orig
+Makefile.orig
+*.orig
+*.rej
+
+# Terminfo
+st.info.orig
+
+# Desktop/Installation
+st.desktop.orig
+st.1.orig
+
+# Temporary files
+/data/data/com.termux/files/usr/tmp/st-images-*
+*.swp
+*~
+.DS_Store
+
+# Dependencies/Others
+.clang-format.orig
+EOF
