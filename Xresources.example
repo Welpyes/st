@@ -1,0 +1,58 @@
+! === st configuration example ===
+! Copy these to your ~/.Xresources or ~/.Xdefaults and run `xrdb -merge ~/.Xresources`
+
+! --- Fonts & Terminal ---
+st.font:                Ioskeley Mono:style:regular:pixelsize=18
+st.font2.0:             Symbols Nerd Font Mono:pixelsize=18
+st.termname:            st-256color
+st.borderpx:            1
+
+! --- Behavior & Performance ---
+st.alpha:               1.0
+st.tabspaces:           4
+st.blinktimeout:        500
+st.bellvolume:          0
+st.cursorstyle:         1
+st.minlatency:          2
+st.maxlatency:          33
+st.doubleclicktimeout:  300
+st.tripleclicktimeout:  600
+st.boxdraw:             1
+st.boxdraw_bold:        1
+
+! --- st colors (Tokyo Night style) ---
+st.background:          #1a1b26
+st.foreground:          #c0caf5
+st.cursorColor:         #c0caf5
+
+! Black + DarkGrey
+st.color0:              #15161e
+st.color8:              #414868
+
+! DarkRed + Red
+st.color1:              #f7768e
+st.color9:              #f7768e
+
+! DarkGreen + Green
+st.color2:              #9ece6a
+st.color10:             #9ece6a
+
+! DarkYellow + Yellow
+st.color3:              #e0af68
+st.color11:             #e0af68
+
+! DarkBlue + Blue
+st.color4:              #7aa2f7
+st.color12:             #7aa2f7
+
+! DarkMagenta + Magenta
+st.color5:              #bb9af7
+st.color13:             #bb9af7
+
+! DarkCyan + Cyan
+st.color6:              #7dcfff
+st.color14:             #7dcfff
+
+! LightGrey + White
+st.color7:              #a9b1d6
+st.color15:             #c0caf5
