@@ -68,6 +68,10 @@ make install
 #### Apply your own settings dynamically
 
 By default, the terminal doesnt ship with any colourschemes or font so you have to provide it yourself in `~/.Xresources`. <br>
+so to load stuff on startup, please put this in your `.xinitrc` or your startup script
+```bash
+xrdb -merge ~/.Xresources
+```
 
 **Font and Terminal settings** <br>
 
