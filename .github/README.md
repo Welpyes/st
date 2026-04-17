@@ -11,6 +11,7 @@ I also modified Xresources to include more options.
 
 - [Kitty graphics protocol](https://github.com/sergei-grechanik/st-graphics) - Renders images using the modern kitty protocol, this provides high quality image viewing directly in the terminal
 - [Boxdraw](https://st.suckless.org/patches/boxdraw) - Renders texts in neat boxes so TUI programs dont have gaps between texts
+- [Alpha](https://st.suckless.org/patches/alpha/) - Transparency support
 - [xresources with signal reloading](https://st.suckless.org/patches/xresources-with-reload-signal/) - Configure st via Xresources and signal reloading. Modified it slightly to include more options.
 - [Scrollback](https://st.suckless.org/patches/scrollback)
 - [Wide glyph support](https://st.suckless.org/patches/glyph_wide_support/) - Fixes wide glyphs truncation
