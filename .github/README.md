@@ -1,7 +1,7 @@
 # st-terminal
 Fast and "Simple" Terminal emulator from the suckless project. <br>
 
-![screenshot](./.github/screenshot.jpg)
+[screenshot](../.github/screenshot.jpg)
 
 This patchset is based entirely on [St-Graphics](https://github.com/sergei-grechanik/st-graphics). Specifically, on the [graphics-with-patches](https://github.com/sergei-grechanik/st-graphics/tree/graphics-with-patches) branch. but removed some useless patches that isnt needed for modern use. And some useless newline ttywrite.
 
@@ -166,5 +166,5 @@ kill -USR1 $(pgrep -x st)
 ## Idle memory usage comparison
 
 > [!NOTE]
-> This is done on an old Samsung s9+ phone so results may vary
-![benchmark.jpg](./.github/benchmark.jpg)
+> This is done on an old Samsung s9+ phone so results may vary <br>
+[benchmark.jpg](../.github/benchmark.jpg)
