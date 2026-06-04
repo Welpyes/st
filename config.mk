@@ -7,8 +7,8 @@ VERSION = 0.9.2
 UNAME := $(shell uname -o 2>/dev/null || uname -s)
 
 ifeq ($(UNAME),Android)
-SHMEMU_INCS = `$(PKG_CONFIG) --cflags shmemu`
-SHMEMU_LIBS = -lshmemu `$(PKG_CONFIG) --libs shmemu` # or however shmemu links
+SHMEMU_INCS = `$(PKG_CONFIG) --cflags libshmemu`
+SHMEMU_LIBS = -lshmemu `$(PKG_CONFIG) --libs libshmemu` # or however shmemu links
 SHMEMU_FLAGS = -include shmemu.h
 PREFIX = /data/data/com.termux/files/usr
 else
